@@ -10,7 +10,7 @@ export const IMAGES = {
   // Dedicated Lanes: Box Truck at Logistics Distribution Center
   boxTruckDistribution: {
     src: "/images/dnp-boxtruck-distribution.webp",
-    fallback: "https://images.unsplash.com/photo-1789148275429-b89fb13e548c?auto=format&fit=crop&w=2000&q=80",
+    fallback: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=2000&q=80",
     alt: "Commercial straight box truck positioned at modern distribution center loading dock",
   },
   // About Page: Box Truck & Logistics Operations
