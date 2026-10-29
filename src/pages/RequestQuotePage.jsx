@@ -1,43 +1,76 @@
-import React, { useState, useId } from 'react';
-import { Link } from 'react-router-dom';
-import { Send, CheckCircle2, AlertCircle, Phone, ArrowLeft, ShieldCheck, Clock, Calendar } from 'lucide-react';
+import React, { useState, useId, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Send, CheckCircle2, AlertCircle, Phone, ArrowLeft, ShieldCheck, Clock, Calendar, Repeat, Truck, Layers } from 'lucide-react';
 import { COMPANY } from '../data/company';
 import SEO from '../components/SEO';
 
 export default function RequestQuotePage() {
+  const inquiryTypeId = useId();
   const nameId = useId();
   const companyId = useId();
   const emailId = useId();
   const phoneId = useId();
   const contactMethodId = useId();
-  const originId = useId();
-  const destinationId = useId();
-  const dateId = useId();
-  const categoryId = useId();
-  const weightId = useId();
-  const dimensionsId = useId();
-  const descId = useId();
-  const specialId = useId();
-  const messageId = useId();
+  
+  // Dedicated lane IDs
+  const routeTypeId = useId();
+  const originCityId = useId();
+  const destCityId = useId();
+  const frequencyId = useId();
+  const startDateId = useId();
+  const operatingDaysId = useId();
+  const commodityId = useId();
+  const approxWeightId = useId();
+  const palletCountId = useId();
+  const handlingId = useId();
+  const laneNotesId = useId();
+
+  // General inquiry IDs
+  const generalTopicId = useId();
+  const generalMessageId = useId();
+  
   const consentId = useId();
 
+  const [searchParams] = useSearchParams();
+  const initialType = searchParams.get('type') === 'onetime' ? 'onetime' : searchParams.get('type') === 'general' ? 'general' : 'dedicated';
+  const [inquiryType, setInquiryType] = useState(initialType);
+
+  useEffect(() => {
+    const typeFromParam = searchParams.get('type');
+    if (typeFromParam && ['dedicated', 'onetime', 'general'].includes(typeFromParam)) {
+      setInquiryType(typeFromParam);
+    }
+  }, [searchParams]);
+
   const [formData, setFormData] = useState({
+    // Contact Info
     fullName: '',
     company: '',
     email: '',
     phone: '',
     preferredContactMethod: 'Phone',
-    pickupLocation: '',
-    deliveryLocation: '',
-    pickupDate: '',
+
+    // Route / Lane Parameters
+    routeType: 'Round-Trip', // 'Round-Trip' | 'One-Way'
+    originLocation: '',
+    destinationLocation: '',
+    frequency: 'Daily (5+ loads/week)',
+    startDate: '',
+    operatingDays: 'Monday - Friday',
     cargoCategory: 'General Freight',
-    descriptionOfGoods: '',
+    commodity: '',
     approximateWeight: '',
-    dimensionsPieces: '',
+    palletCount: '',
     specialRequirements: '',
     additionalNotes: '',
+
+    // General message
+    generalSubject: '',
+    generalMessage: '',
+
+    // Consent & anti-spam
     privacyConsent: false,
-    honeypot: '', // Spam protection
+    honeypot: '',
   });
 
   const [status, setStatus] = useState('idle'); // idle | submitting | success | error
@@ -74,12 +107,14 @@ export default function RequestQuotePage() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 800));
 
-      const refCode = `DNP-QUOTE-${Math.floor(100000 + Math.random() * 900000)}`;
+      const prefix = inquiryType === 'dedicated' ? 'DNP-LANE' : inquiryType === 'onetime' ? 'DNP-FREIGHT' : 'DNP-INQ';
+      const refCode = `${prefix}-${Math.floor(100000 + Math.random() * 900000)}`;
 
-      // Save to localStorage for review
+      // Save to localStorage
       const existingQuotes = JSON.parse(localStorage.getItem('dnp_quote_inquiries') || '[]');
       existingQuotes.push({
         reference: refCode,
+        inquiryType,
         submittedAt: new Date().toISOString(),
         ...formData,
       });
@@ -89,7 +124,7 @@ export default function RequestQuotePage() {
       setStatus('success');
     } catch (err) {
       console.error(err);
-      setErrorMessage("Unable to transmit your quote request. Please call (615) 525-7151 directly.");
+      setErrorMessage("Unable to transmit your request. Please contact our Brentwood office directly at (615) 525-7151.");
       setStatus('error');
     }
   };
@@ -101,15 +136,20 @@ export default function RequestQuotePage() {
       email: '',
       phone: '',
       preferredContactMethod: 'Phone',
-      pickupLocation: '',
-      deliveryLocation: '',
-      pickupDate: '',
+      routeType: 'Round-Trip',
+      originLocation: '',
+      destinationLocation: '',
+      frequency: 'Daily (5+ loads/week)',
+      startDate: '',
+      operatingDays: 'Monday - Friday',
       cargoCategory: 'General Freight',
-      descriptionOfGoods: '',
+      commodity: '',
       approximateWeight: '',
-      dimensionsPieces: '',
+      palletCount: '',
       specialRequirements: '',
       additionalNotes: '',
+      generalSubject: '',
+      generalMessage: '',
       privacyConsent: false,
       honeypot: '',
     });
@@ -119,8 +159,8 @@ export default function RequestQuotePage() {
   return (
     <>
       <SEO
-        title="Request a Transportation Quote"
-        description="Submit your shipment parameters to request a freight transportation quote from DNP Couriers LLC in Brentwood, Tennessee."
+        title="Request Dedicated Lane or Freight Inquiry"
+        description="Submit your dedicated lane parameters or freight transportation requirements for review by DNP Couriers LLC in Brentwood, TN."
       />
 
       {/* HERO SECTION */}
@@ -128,13 +168,13 @@ export default function RequestQuotePage() {
         <div className="max-w-4xl mx-auto px-6 sm:px-8">
           <div className="space-y-4">
             <span className="text-xs font-semibold tracking-widest uppercase text-[#D99A38] block">
-              Freight Intake
+              Direct Capacity Inquiry
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#FAFAF8] leading-tight">
-              Tell Us About Your Shipment.
+              Submit Your Transportation Requirements.
             </h1>
             <p className="text-base sm:text-lg text-[#FAFAF8]/85 font-normal leading-relaxed max-w-2xl">
-              Provide a few details about your transportation requirements. Our team can review your inquiry and discuss the next steps.
+              We welcome dedicated-lane inquiries from freight brokers, commercial shippers, and 3PL partners seeking committed box-truck capacity on recurring routes.
             </p>
           </div>
         </div>
@@ -152,10 +192,10 @@ export default function RequestQuotePage() {
 
               <div className="space-y-2">
                 <h2 className="text-2xl sm:text-3xl font-bold text-[#151719]">
-                  Quote Request Received
+                  Inquiry Successfully Received
                 </h2>
                 <p className="text-sm sm:text-base text-[#737980] max-w-lg mx-auto">
-                  Thank you for submitting your shipment details to DNP Couriers LLC. Your inquiry has been registered in our system for review.
+                  Thank you for submitting your freight parameters to DNP Couriers LLC. Our dispatch and operations team will review your specifications against our box-truck capacity.
                 </p>
               </div>
 
@@ -166,7 +206,7 @@ export default function RequestQuotePage() {
 
               <div className="pt-2">
                 <p className="text-xs text-[#737980]">
-                  Need immediate confirmation? You may also call our office directly at{' '}
+                  Need immediate conversation regarding recurring lanes? Call our Brentwood office directly at{' '}
                   <a href={`tel:${COMPANY.phoneRaw}`} className="text-[#151719] font-bold underline">
                     {COMPANY.phone}
                   </a>.
@@ -185,6 +225,73 @@ export default function RequestQuotePage() {
             </div>
           ) : (
             <div className="bg-white p-8 sm:p-12 rounded border border-[#151719]/10 shadow-sm">
+              
+              {/* STEP 1: INQUIRY TYPE SELECTOR */}
+              <div className="mb-10 pb-8 border-b border-[#151719]/10">
+                <span className="text-xs font-mono uppercase tracking-wider text-[#D99A38] block mb-2">
+                  Select Inquiry Type
+                </span>
+                <h2 className="text-xl font-bold text-[#151719] mb-4">
+                  What kind of transportation are you seeking?
+                </h2>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setInquiryType('dedicated')}
+                    className={`p-4 rounded border text-left transition-all ${
+                      inquiryType === 'dedicated'
+                        ? 'border-[#D99A38] bg-[#D99A38]/5 ring-1 ring-[#D99A38]'
+                        : 'border-[#151719]/15 bg-[#FAFAF8] hover:border-[#151719]/30'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <Repeat className={`w-4 h-4 ${inquiryType === 'dedicated' ? 'text-[#D99A38]' : 'text-[#737980]'}`} />
+                      <span className="text-sm font-bold text-[#151719]">Dedicated Lane</span>
+                    </div>
+                    <p className="text-xs text-[#737980] leading-snug">
+                      Recurring route, multi-load weekly schedule, or contracted freight partner.
+                    </p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setInquiryType('onetime')}
+                    className={`p-4 rounded border text-left transition-all ${
+                      inquiryType === 'onetime'
+                        ? 'border-[#D99A38] bg-[#D99A38]/5 ring-1 ring-[#D99A38]'
+                        : 'border-[#151719]/15 bg-[#FAFAF8] hover:border-[#151719]/30'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <Truck className={`w-4 h-4 ${inquiryType === 'onetime' ? 'text-[#D99A38]' : 'text-[#737980]'}`} />
+                      <span className="text-sm font-bold text-[#151719]">One-Time Freight</span>
+                    </div>
+                    <p className="text-xs text-[#737980] leading-snug">
+                      Single point-to-point commercial movement, spot shipment, or scheduled load.
+                    </p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setInquiryType('general')}
+                    className={`p-4 rounded border text-left transition-all ${
+                      inquiryType === 'general'
+                        ? 'border-[#D99A38] bg-[#D99A38]/5 ring-1 ring-[#D99A38]'
+                        : 'border-[#151719]/15 bg-[#FAFAF8] hover:border-[#151719]/30'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <Layers className={`w-4 h-4 ${inquiryType === 'general' ? 'text-[#D99A38]' : 'text-[#737980]'}`} />
+                      <span className="text-sm font-bold text-[#151719]">General Inquiry</span>
+                    </div>
+                    <p className="text-xs text-[#737980] leading-snug">
+                      Carrier onboarding, compliance packet, or partnership exploration.
+                    </p>
+                  </button>
+                </div>
+              </div>
+
               <form onSubmit={handleSubmit} className="space-y-10" noValidate={false}>
                 
                 {/* Honeypot field for spam prevention */}
@@ -208,14 +315,14 @@ export default function RequestQuotePage() {
                       Part 01
                     </span>
                     <h2 className="text-xl font-bold text-[#151719]">
-                      Contact Information
+                      Contact &amp; Organization Details
                     </h2>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
                       <label htmlFor={nameId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
-                        Full Name <span className="text-[#D99A38]">*</span>
+                        Contact Name <span className="text-[#D99A38]">*</span>
                       </label>
                       <input
                         type="text"
@@ -224,21 +331,22 @@ export default function RequestQuotePage() {
                         required
                         value={formData.fullName}
                         onChange={handleChange}
-                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors"
+                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719] focus:ring-1 focus:ring-[#151719]"
                       />
                     </div>
 
                     <div>
                       <label htmlFor={companyId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
-                        Company Name (Optional)
+                        Company / Brokerage Name <span className="text-[#D99A38]">*</span>
                       </label>
                       <input
                         type="text"
                         id={companyId}
                         name="company"
+                        required
                         value={formData.company}
                         onChange={handleChange}
-                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors"
+                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719] focus:ring-1 focus:ring-[#151719]"
                       />
                     </div>
                   </div>
@@ -255,7 +363,7 @@ export default function RequestQuotePage() {
                         required
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors"
+                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719] focus:ring-1 focus:ring-[#151719]"
                       />
                     </div>
 
@@ -270,7 +378,7 @@ export default function RequestQuotePage() {
                         required
                         value={formData.phone}
                         onChange={handleChange}
-                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors"
+                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719] focus:ring-1 focus:ring-[#151719]"
                       />
                     </div>
 
@@ -283,7 +391,7 @@ export default function RequestQuotePage() {
                         name="preferredContactMethod"
                         value={formData.preferredContactMethod}
                         onChange={handleChange}
-                        className="themed-select w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors"
+                        className="themed-select w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
                       >
                         <option value="Phone">Telephone</option>
                         <option value="Email">Email</option>
@@ -292,160 +400,366 @@ export default function RequestQuotePage() {
                   </div>
                 </div>
 
-                {/* PART 2: SHIPMENT DETAILS */}
-                <div className="space-y-6 pt-4">
-                  <div className="border-b border-[#151719]/10 pb-3">
-                    <span className="text-xs font-mono uppercase tracking-wider text-[#D99A38] block mb-1">
-                      Part 02
-                    </span>
-                    <h2 className="text-xl font-bold text-[#151719]">
-                      Shipment Details
-                    </h2>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label htmlFor={originId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
-                        Pickup City &amp; State <span className="text-[#D99A38]">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id={originId}
-                        name="pickupLocation"
-                        required
-                        value={formData.pickupLocation}
-                        onChange={handleChange}
-                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors"
-                      />
+                {/* PART 2: DEDICATED LANE PARAMETERS (Rendered when 'dedicated' selected) */}
+                {inquiryType === 'dedicated' && (
+                  <div className="space-y-6 pt-4">
+                    <div className="border-b border-[#151719]/10 pb-3">
+                      <span className="text-xs font-mono uppercase tracking-wider text-[#D99A38] block mb-1">
+                        Part 02
+                      </span>
+                      <h2 className="text-xl font-bold text-[#151719]">
+                        Dedicated Lane Specifications
+                      </h2>
                     </div>
 
-                    <div>
-                      <label htmlFor={destinationId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
-                        Delivery City &amp; State <span className="text-[#D99A38]">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id={destinationId}
-                        name="deliveryLocation"
-                        required
-                        value={formData.deliveryLocation}
-                        onChange={handleChange}
-                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors"
-                      />
-                    </div>
-                  </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                      <div>
+                        <label htmlFor={routeTypeId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Route Configuration <span className="text-[#D99A38]">*</span>
+                        </label>
+                        <select
+                          id={routeTypeId}
+                          name="routeType"
+                          value={formData.routeType}
+                          onChange={handleChange}
+                          className="themed-select w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
+                        >
+                          <option value="Round-Trip">Round-Trip Dedicated Lane</option>
+                          <option value="One-Way">One-Way Recurring Run</option>
+                          <option value="Multi-Stop">Multi-Stop Regional Route</option>
+                        </select>
+                      </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label htmlFor={dateId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
-                        Target Pickup Date <span className="text-[#D99A38]">*</span>
-                      </label>
-                      <div className="relative">
+                      <div>
+                        <label htmlFor={originCityId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Origin City &amp; State <span className="text-[#D99A38]">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          id={originCityId}
+                          name="originLocation"
+                          required
+                          value={formData.originLocation}
+                          onChange={handleChange}
+                          className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor={destCityId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Destination City &amp; State <span className="text-[#D99A38]">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          id={destCityId}
+                          name="destinationLocation"
+                          required
+                          value={formData.destinationLocation}
+                          onChange={handleChange}
+                          className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                      <div>
+                        <label htmlFor={frequencyId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Estimated Load Frequency <span className="text-[#D99A38]">*</span>
+                        </label>
+                        <select
+                          id={frequencyId}
+                          name="frequency"
+                          value={formData.frequency}
+                          onChange={handleChange}
+                          className="themed-select w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
+                        >
+                          <option value="Daily (5+ loads/week)">Daily (5+ loads/week)</option>
+                          <option value="3-4 loads/week">3–4 loads per week</option>
+                          <option value="1-2 loads/week">1–2 loads per week</option>
+                          <option value="Bi-weekly">Bi-weekly regular runs</option>
+                          <option value="Monthly / Periodic">Monthly / Periodic scheduled runs</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label htmlFor={operatingDaysId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Operating Days <span className="text-[#D99A38]">*</span>
+                        </label>
+                        <select
+                          id={operatingDaysId}
+                          name="operatingDays"
+                          value={formData.operatingDays}
+                          onChange={handleChange}
+                          className="themed-select w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
+                        >
+                          <option value="Monday - Friday">Monday – Friday</option>
+                          <option value="7 Days a Week">7 Days a Week</option>
+                          <option value="Weekends Only">Weekends Only</option>
+                          <option value="Specific Designated Days">Specific Designated Days</option>
+                          <option value="Flexible Schedule">Flexible / Negotiable</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label htmlFor={startDateId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Target Start Date <span className="text-[#D99A38]">*</span>
+                        </label>
                         <input
                           type="date"
-                          id={dateId}
-                          name="pickupDate"
+                          id={startDateId}
+                          name="startDate"
                           required
-                          value={formData.pickupDate}
+                          value={formData.startDate}
                           onChange={handleChange}
-                          className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors cursor-pointer"
+                          className="themed-date w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719] cursor-pointer"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                      <div>
+                        <label htmlFor={commodityId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Commodity / Freight Type <span className="text-[#D99A38]">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          id={commodityId}
+                          name="commodity"
+                          required
+                          value={formData.commodity}
+                          onChange={handleChange}
+                          className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor={approxWeightId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Approx. Weight per Load (lbs) <span className="text-[#D99A38]">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          id={approxWeightId}
+                          name="approximateWeight"
+                          required
+                          value={formData.approximateWeight}
+                          onChange={handleChange}
+                          className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor={palletCountId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Pallet Count / Dimensions
+                        </label>
+                        <input
+                          type="text"
+                          id={palletCountId}
+                          name="palletCount"
+                          value={formData.palletCount}
+                          onChange={handleChange}
+                          className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label htmlFor={categoryId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
-                        Cargo Category <span className="text-[#D99A38]">*</span>
-                      </label>
-                      <select
-                        id={categoryId}
-                        name="cargoCategory"
-                        required
-                        value={formData.cargoCategory}
-                        onChange={handleChange}
-                        className="themed-select w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors"
-                      >
-                        <option value="General Freight">General Freight</option>
-                        <option value="Household Goods">Household Goods</option>
-                        <option value="Commercial Inquiry">Commercial Freight Inquiry</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor={descId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
-                      Description of Goods <span className="text-[#D99A38]">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id={descId}
-                      name="descriptionOfGoods"
-                      required
-                      value={formData.descriptionOfGoods}
-                      onChange={handleChange}
-                      className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label htmlFor={weightId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
-                        Approximate Weight (lbs) <span className="text-[#D99A38]">*</span>
+                      <label htmlFor={handlingId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                        Handling Requirements (e.g., Dock-to-Dock, Liftgate, Driver Assist)
                       </label>
                       <input
                         type="text"
-                        id={weightId}
-                        name="approximateWeight"
-                        required
-                        value={formData.approximateWeight}
+                        id={handlingId}
+                        name="specialRequirements"
+                        value={formData.specialRequirements}
                         onChange={handleChange}
-                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors"
+                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
                       />
                     </div>
 
                     <div>
-                      <label htmlFor={dimensionsId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
-                        Dimensions or Piece Count (If Known)
+                      <label htmlFor={laneNotesId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                        Additional Lane Notes or Contract Requirements
+                      </label>
+                      <textarea
+                        id={laneNotesId}
+                        name="additionalNotes"
+                        rows={3}
+                        value={formData.additionalNotes}
+                        onChange={handleChange}
+                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors resize-none focus:outline-none focus:border-[#151719]"
+                      ></textarea>
+                    </div>
+                  </div>
+                )}
+
+                {/* PART 2: ONE-TIME FREIGHT PARAMETERS (Rendered when 'onetime' selected) */}
+                {inquiryType === 'onetime' && (
+                  <div className="space-y-6 pt-4">
+                    <div className="border-b border-[#151719]/10 pb-3">
+                      <span className="text-xs font-mono uppercase tracking-wider text-[#D99A38] block mb-1">
+                        Part 02
+                      </span>
+                      <h2 className="text-xl font-bold text-[#151719]">
+                        One-Time Shipment Details
+                      </h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div>
+                        <label htmlFor={originCityId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Pickup City &amp; State <span className="text-[#D99A38]">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          id={originCityId}
+                          name="originLocation"
+                          required
+                          value={formData.originLocation}
+                          onChange={handleChange}
+                          className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor={destCityId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Delivery City &amp; State <span className="text-[#D99A38]">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          id={destCityId}
+                          name="destinationLocation"
+                          required
+                          value={formData.destinationLocation}
+                          onChange={handleChange}
+                          className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div>
+                        <label htmlFor={startDateId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Target Pickup Date <span className="text-[#D99A38]">*</span>
+                        </label>
+                        <input
+                          type="date"
+                          id={startDateId}
+                          name="startDate"
+                          required
+                          value={formData.startDate}
+                          onChange={handleChange}
+                          className="themed-date w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719] cursor-pointer"
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor={commodityId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Cargo Classification <span className="text-[#D99A38]">*</span>
+                        </label>
+                        <select
+                          id={commodityId}
+                          name="cargoCategory"
+                          value={formData.cargoCategory}
+                          onChange={handleChange}
+                          className="themed-select w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
+                        >
+                          <option value="General Freight">General Commercial Freight</option>
+                          <option value="Household Goods">Household Goods (Subject to Review)</option>
+                          <option value="Commercial Inquiry">Other Commercial Inquiry</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                      <div>
+                        <label htmlFor={approxWeightId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Approximate Weight (lbs) <span className="text-[#D99A38]">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          id={approxWeightId}
+                          name="approximateWeight"
+                          required
+                          value={formData.approximateWeight}
+                          onChange={handleChange}
+                          className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor={palletCountId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                          Piece Count or Dimensions
+                        </label>
+                        <input
+                          type="text"
+                          id={palletCountId}
+                          name="palletCount"
+                          value={formData.palletCount}
+                          onChange={handleChange}
+                          className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor={laneNotesId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                        Shipment Description &amp; Handling Notes
+                      </label>
+                      <textarea
+                        id={laneNotesId}
+                        name="additionalNotes"
+                        rows={3}
+                        value={formData.additionalNotes}
+                        onChange={handleChange}
+                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors resize-none focus:outline-none focus:border-[#151719]"
+                      ></textarea>
+                    </div>
+                  </div>
+                )}
+
+                {/* PART 2: GENERAL BUSINESS INQUIRY (Rendered when 'general' selected) */}
+                {inquiryType === 'general' && (
+                  <div className="space-y-6 pt-4">
+                    <div className="border-b border-[#151719]/10 pb-3">
+                      <span className="text-xs font-mono uppercase tracking-wider text-[#D99A38] block mb-1">
+                        Part 02
+                      </span>
+                      <h2 className="text-xl font-bold text-[#151719]">
+                        Inquiry Information
+                      </h2>
+                    </div>
+
+                    <div>
+                      <label htmlFor={generalTopicId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                        Subject or Topic <span className="text-[#D99A38]">*</span>
                       </label>
                       <input
                         type="text"
-                        id={dimensionsId}
-                        name="dimensionsPieces"
-                        value={formData.dimensionsPieces}
+                        id={generalTopicId}
+                        name="generalSubject"
+                        required
+                        value={formData.generalSubject}
                         onChange={handleChange}
-                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors"
+                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
                       />
                     </div>
-                  </div>
 
-                  <div>
-                    <label htmlFor={specialId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
-                      Special Requirements (Dock Access, Equipment, Timing)
-                    </label>
-                    <input
-                      type="text"
-                      id={specialId}
-                      name="specialRequirements"
-                      value={formData.specialRequirements}
-                      onChange={handleChange}
-                      className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors"
-                    />
+                    <div>
+                      <label htmlFor={generalMessageId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
+                        Message Details <span className="text-[#D99A38]">*</span>
+                      </label>
+                      <textarea
+                        id={generalMessageId}
+                        name="generalMessage"
+                        required
+                        rows={4}
+                        value={formData.generalMessage}
+                        onChange={handleChange}
+                        className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors resize-none focus:outline-none focus:border-[#151719]"
+                      ></textarea>
+                    </div>
                   </div>
-
-                  <div>
-                    <label htmlFor={messageId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
-                      Additional Message / Details
-                    </label>
-                    <textarea
-                      id={messageId}
-                      name="additionalNotes"
-                      rows={3}
-                      value={formData.additionalNotes}
-                      onChange={handleChange}
-                      className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors resize-none"
-                    ></textarea>
-                  </div>
-                </div>
+                )}
 
                 {/* PART 3: CONSENT & SUBMISSION */}
                 <div className="space-y-4 pt-4 border-t border-[#151719]/10">
@@ -460,7 +774,7 @@ export default function RequestQuotePage() {
                       className="mt-1 h-4 w-4 rounded border-[#151719]/30 text-[#151719] focus:ring-[#D99A38] accent-[#D99A38]"
                     />
                     <label htmlFor={consentId} className="text-xs text-[#737980] leading-relaxed">
-                      I understand that submitting this inquiry does not constitute a confirmed freight booking. I agree to the processing of this information in accordance with DNP Couriers LLC's{' '}
+                      I understand that submitting this inquiry does not constitute a confirmed freight booking or binding contract. I agree to the processing of this information in accordance with DNP Couriers LLC's{' '}
                       <Link to="/privacy-policy" className="text-[#151719] underline font-medium">
                         Privacy Policy
                       </Link>.
@@ -478,13 +792,19 @@ export default function RequestQuotePage() {
                     <button
                       type="submit"
                       disabled={status === 'submitting'}
-                      className="inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-medium text-white bg-[#151719] hover:bg-[#151719]/90 disabled:opacity-50 rounded transition-colors"
+                      className="inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-semibold text-white bg-[#151719] hover:bg-[#151719]/90 disabled:opacity-50 rounded transition-colors"
                     >
                       {status === 'submitting' ? (
                         <span>Processing Inquiry...</span>
                       ) : (
                         <>
-                          <span>Submit Transportation Inquiry</span>
+                          <span>
+                            {inquiryType === 'dedicated'
+                              ? 'Submit Dedicated Lane Inquiry'
+                              : inquiryType === 'onetime'
+                              ? 'Submit Freight Quote Request'
+                              : 'Send Business Inquiry'}
+                          </span>
                           <Send className="w-4 h-4" />
                         </>
                       )}

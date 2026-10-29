@@ -13,6 +13,7 @@ import HouseholdGoodsPage from './pages/HouseholdGoodsPage';
 import IndustriesPage from './pages/IndustriesPage';
 import RequestQuotePage from './pages/RequestQuotePage';
 import ContactPage from './pages/ContactPage';
+import DedicatedLanesPage from './pages/DedicatedLanesPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsPage from './pages/TermsPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -31,6 +32,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/services" element={<ServicesPage />} />
+            <Route path="/dedicated-lanes" element={<DedicatedLanesPage />} />
             <Route path="/services/general-freight" element={<GeneralFreightPage />} />
             <Route path="/services/household-goods" element={<HouseholdGoodsPage />} />
             <Route path="/industries" element={<IndustriesPage />} />

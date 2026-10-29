@@ -7,7 +7,15 @@ import SafeImage from './SafeImage';
 export default function ClosingCta({
   headline = "Have Freight to Move? Let's Talk.",
   supportingCopy = "Share your transportation requirements with DNP Couriers LLC to begin a conversation about your shipment.",
+  primaryCtaText = "Request a Quote",
+  primaryCtaLink = "/request-a-quote",
+  secondaryCtaText,
+  secondaryCtaLink,
 }) {
+  const isExternalSecondary = secondaryCtaLink && secondaryCtaLink.startsWith('tel:');
+  const secLink = secondaryCtaLink || `tel:${COMPANY.phoneRaw}`;
+  const secText = secondaryCtaText || `Call ${COMPANY.phone}`;
+
   return (
     <section className="relative bg-[#151719] text-[#FAFAF8] overflow-hidden py-24 sm:py-32">
       {/* Background Cinematic Atmosphere */}
@@ -15,7 +23,7 @@ export default function ClosingCta({
         <SafeImage
           imageKey="closingCta"
           className="w-full h-full object-cover object-center opacity-25"
-          alt="Commercial freight truck on Tennessee highway in late-afternoon light"
+          alt="Commercial straight box truck on highway in late-afternoon light"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#151719] via-[#151719]/80 to-[#151719]/90"></div>
       </div>
@@ -40,20 +48,29 @@ export default function ClosingCta({
 
           <div className="pt-4 flex flex-wrap items-center gap-4 sm:gap-6">
             <Link
-              to="/request-a-quote"
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-medium text-[#151719] bg-[#FAFAF8] hover:bg-white rounded transition-colors"
+              to={primaryCtaLink}
+              className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-semibold text-[#151719] bg-[#FAFAF8] hover:bg-white rounded transition-colors"
             >
-              <span>Request a Quote</span>
+              <span>{primaryCtaText}</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
 
-            <a
-              href={`tel:${COMPANY.phoneRaw}`}
-              className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-medium text-[#FAFAF8] bg-transparent hover:bg-white/[0.08] border border-[#FAFAF8]/30 hover:border-[#FAFAF8]/60 rounded transition-colors"
-            >
-              <Phone className="w-4 h-4 text-[#D99A38]" />
-              <span>Call {COMPANY.phone}</span>
-            </a>
+            {isExternalSecondary || !secondaryCtaLink ? (
+              <a
+                href={secLink}
+                className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-medium text-[#FAFAF8] bg-transparent hover:bg-white/[0.08] border border-[#FAFAF8]/30 hover:border-[#FAFAF8]/60 rounded transition-colors"
+              >
+                <Phone className="w-4 h-4 text-[#D99A38]" />
+                <span>{secText}</span>
+              </a>
+            ) : (
+              <Link
+                to={secondaryCtaLink}
+                className="inline-flex items-center justify-center gap-2 px-7 py-4 text-base font-medium text-[#FAFAF8] bg-transparent hover:bg-white/[0.08] border border-[#FAFAF8]/30 hover:border-[#FAFAF8]/60 rounded transition-colors"
+              >
+                <span>{secText}</span>
+              </Link>
+            )}
           </div>
 
         </div>

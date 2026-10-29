@@ -83,13 +83,17 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-7">
             <NavLink to="/" className={navClass}>
               Home
             </NavLink>
 
-            <NavLink to="/about" className={navClass}>
-              About
+            {/* Dedicated Lanes Feature Link */}
+            <NavLink to="/dedicated-lanes" className={navClass}>
+              <span className="flex items-center gap-1.5">
+                <span>Dedicated Lanes</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-[#D99A38]"></span>
+              </span>
             </NavLink>
 
             {/* Services Dropdown */}
@@ -98,7 +102,7 @@ export default function Navbar() {
                 type="button"
                 onClick={() => setServicesDropdownOpen(!servicesDropdownOpen)}
                 onMouseEnter={() => setServicesDropdownOpen(true)}
-                className={`inline-flex items-center gap-1.5 text-sm font-medium transition-colors focus:outline-none ${
+                className={`inline-flex items-center gap-1 text-sm font-medium transition-colors focus:outline-none ${
                   location.pathname.startsWith('/services')
                     ? 'text-[#D99A38]'
                     : isHome && !isScrolled
@@ -128,7 +132,7 @@ export default function Navbar() {
                     to="/services/general-freight"
                     className="block px-4 py-2.5 text-sm text-[#737980] hover:text-[#151719] hover:bg-[#151719]/[0.04] transition-colors"
                   >
-                    General Freight
+                    General Freight (Box Truck)
                   </Link>
                   <Link
                     to="/services/household-goods"
@@ -142,6 +146,10 @@ export default function Navbar() {
 
             <NavLink to="/industries" className={navClass}>
               Industries
+            </NavLink>
+
+            <NavLink to="/about" className={navClass}>
+              About
             </NavLink>
 
             <NavLink to="/contact" className={navClass}>
@@ -162,10 +170,10 @@ export default function Navbar() {
             </a>
 
             <Link
-              to="/request-a-quote"
+              to="/request-a-quote?type=dedicated"
               className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-white bg-[#151719] hover:bg-[#151719]/90 border border-[#151719] rounded transition-colors"
             >
-              Request a Quote
+              Discuss Dedicated Lanes
             </Link>
           </div>
 
@@ -204,10 +212,11 @@ export default function Navbar() {
               Home
             </Link>
             <Link
-              to="/about"
-              className="text-base font-medium text-[#151719] hover:text-[#D99A38] py-1"
+              to="/dedicated-lanes"
+              className="text-base font-semibold text-[#D99A38] py-1 flex items-center justify-between"
             >
-              About DNP Couriers
+              <span>Dedicated Lanes</span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#D99A38]/10 border border-[#D99A38]/30">Active Opportunity</span>
             </Link>
             <div className="space-y-1.5 pl-3 border-l border-[#151719]/15">
               <Link
@@ -220,7 +229,7 @@ export default function Navbar() {
                 to="/services/general-freight"
                 className="block text-sm text-[#737980] hover:text-[#151719] py-0.5"
               >
-                General Freight
+                General Freight (Box Truck)
               </Link>
               <Link
                 to="/services/household-goods"
@@ -234,6 +243,12 @@ export default function Navbar() {
               className="text-base font-medium text-[#151719] hover:text-[#D99A38] py-1"
             >
               Industries &amp; Cargo
+            </Link>
+            <Link
+              to="/about"
+              className="text-base font-medium text-[#151719] hover:text-[#D99A38] py-1"
+            >
+              About DNP Couriers
             </Link>
             <Link
               to="/contact"
@@ -253,10 +268,10 @@ export default function Navbar() {
             </a>
 
             <Link
-              to="/request-a-quote"
+              to="/request-a-quote?type=dedicated"
               className="flex items-center justify-center gap-2 w-full py-3 text-sm font-medium text-white bg-[#151719] rounded"
             >
-              <span>Request a Quote</span>
+              <span>Discuss Dedicated Lanes</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

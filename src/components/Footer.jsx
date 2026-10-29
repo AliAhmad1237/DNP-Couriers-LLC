@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, MapPin, ArrowUp } from 'lucide-react';
+import { Phone, MapPin, ArrowUp, Repeat, Truck } from 'lucide-react';
 import { COMPANY } from '../data/company';
 
 export default function Footer() {
@@ -27,7 +27,7 @@ export default function Footer() {
             </Link>
 
             <p className="text-sm text-[#737980] max-w-sm leading-relaxed">
-              Interstate motor carrier based in Brentwood, Tennessee. Providing dependable transportation services for businesses moving goods across their supply chains.
+              Interstate motor carrier specializing in commercial straight box-truck transportation and dedicated-lane partnerships for shippers, brokers, and 3PLs.
             </p>
 
             <div className="pt-2 space-y-1 text-xs text-[#FAFAF8]/75 font-mono">
@@ -55,12 +55,12 @@ export default function Footer() {
               </li>
               <li>
                 <Link to="/industries" className="hover:text-white transition-colors">
-                  Industries &amp; Cargo
+                  Cargo &amp; Freight
                 </Link>
               </li>
               <li>
                 <Link to="/request-a-quote" className="hover:text-[#D99A38] text-white transition-colors">
-                  Request a Quote
+                  Submit Lane Inquiry
                 </Link>
               </li>
               <li>
@@ -74,9 +74,14 @@ export default function Footer() {
           {/* Column 3: Services (2 Cols) */}
           <div className="md:col-span-2 space-y-3">
             <span className="text-xs font-semibold tracking-wider uppercase text-white block">
-              Services
+              Transportation
             </span>
             <ul className="space-y-2.5 text-sm text-[#737980]">
+              <li>
+                <Link to="/dedicated-lanes" className="hover:text-[#D99A38] text-[#FAFAF8] transition-colors font-medium">
+                  Dedicated Lanes
+                </Link>
+              </li>
               <li>
                 <Link to="/services" className="hover:text-white transition-colors">
                   Services Overview

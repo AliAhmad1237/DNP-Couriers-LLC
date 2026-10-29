@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, ShieldCheck, AlertCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ShieldCheck, AlertCircle, Truck, Repeat, Package } from 'lucide-react';
 import { COMPANY } from '../data/company';
 import SafeImage from '../components/SafeImage';
 import SEO from '../components/SEO';
@@ -10,8 +10,8 @@ export default function IndustriesPage() {
   return (
     <>
       <SEO
-        title="Industries & Cargo Categories"
-        description="Cargo classifications and freight transportation services provided by DNP Couriers LLC. Learn what shipment details are required for general freight."
+        title="Cargo Classifications & Industries Served"
+        description="Cargo classifications and freight transportation capabilities of DNP Couriers LLC. Straight box-truck carriage for commercial supply chains."
       />
 
       {/* HERO SECTION */}
@@ -20,7 +20,7 @@ export default function IndustriesPage() {
           <SafeImage
             imageKey="industries"
             className="w-full h-full object-cover object-center opacity-25"
-            alt="Commercial cargo transportation on American supply routes"
+            alt="Commercial cargo and palletized freight handling"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#151719] via-[#151719]/60 to-transparent"></div>
         </div>
@@ -28,13 +28,13 @@ export default function IndustriesPage() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           <div className="max-w-3xl space-y-6">
             <span className="text-xs font-semibold tracking-widest uppercase text-[#D99A38] block">
-              Cargo &amp; Freight Classifications
+              Cargo Classifications &amp; Operations
             </span>
             <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-[#FAFAF8] leading-tight">
-              Understanding the Freight We Move.
+              Understanding the Freight We Transport.
             </h1>
             <p className="text-lg sm:text-xl text-[#FAFAF8]/85 font-normal leading-relaxed">
-              DNP Couriers LLC transports cargo within its officially registered operating classifications. Review our documented categories and what details are necessary for quote evaluation.
+              DNP Couriers LLC moves freight within its registered motor carrier classifications, utilizing commercial straight box trucks designed for palletized goods, dock loading, and recurring routes.
             </p>
           </div>
         </div>
@@ -48,7 +48,7 @@ export default function IndustriesPage() {
               A Responsible Approach to Cargo Acceptance
             </h2>
             <p className="text-base sm:text-lg text-[#737980] leading-relaxed">
-              In freight transportation, matching the right equipment to the specific cargo is fundamental to safety and compliance. We do not claim blanket capabilities across all industrial niches; instead, we operate strictly within our confirmed motor carrier classifications and confirm load viability directly with shippers.
+              In freight transportation, matching the right vehicle configuration to specific cargo is fundamental to safety, legal compliance, and customer satisfaction. We do not claim blanket capabilities across all industrial niches; instead, we operate strictly within our confirmed motor carrier classifications and confirm load feasibility directly with shippers and brokers.
             </p>
           </div>
         </div>
@@ -82,29 +82,35 @@ export default function IndustriesPage() {
                   Required Shipment Specifications:
                 </span>
                 <ul className="text-xs sm:text-sm text-[#737980] space-y-1.5 list-disc list-inside">
-                  <li>Total estimated weight (lbs) and piece count</li>
+                  <li>Total estimated weight (lbs) and pallet count</li>
                   <li>Pallet dimensions (e.g. 48" x 40" standard)</li>
                   <li>Loading dock vs. ground-level pickup/delivery</li>
                   <li>Target timeline and facility operating hours</li>
                 </ul>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-2 flex flex-wrap gap-4">
                 <Link
                   to="/request-a-quote"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-medium text-white bg-[#151719] hover:bg-[#151719]/90 rounded transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold text-white bg-[#151719] hover:bg-[#151719]/90 rounded transition-colors"
                 >
                   <span>Inquire Regarding General Freight</span>
                   <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  to="/dedicated-lanes"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-semibold text-[#151719] border border-[#151719]/20 hover:border-[#151719]/50 rounded transition-colors"
+                >
+                  <span>Dedicated Lanes</span>
                 </Link>
               </div>
             </div>
 
             <div className="lg:col-span-6 overflow-hidden rounded bg-[#151719]/5">
               <SafeImage
-                imageKey="generalFreight"
-                className="w-full h-[400px] sm:h-[480px] object-cover"
-                alt="Palletized general freight loading"
+                imageKey="boxTruckFreight"
+                className="w-full h-[400px] sm:h-[460px] object-cover"
+                alt="Commercial straight box truck beside palletized freight"
               />
             </div>
 
@@ -120,8 +126,8 @@ export default function IndustriesPage() {
             <div className="lg:col-span-6 overflow-hidden rounded bg-[#151719]/5 order-2 lg:order-1">
               <SafeImage
                 imageKey="householdGoods"
-                className="w-full h-[400px] sm:h-[480px] object-cover"
-                alt="Enclosed transport for household goods"
+                className="w-full h-[400px] sm:h-[460px] object-cover"
+                alt="Securely packaged commercial freight"
               />
             </div>
 
@@ -130,35 +136,31 @@ export default function IndustriesPage() {
                 Official Classification 02
               </span>
               <h2 className="text-3xl sm:text-4xl font-bold text-[#151719] tracking-tight">
-                Household Goods Transportation
+                Household Goods (Commercial Review)
               </h2>
 
               <div className="space-y-4 text-base text-[#737980] leading-relaxed">
                 <p>
-                  Household Goods is documented as an authorized cargo category on our federal carrier profile.
+                  Household Goods is registered under DNP Couriers LLC's motor carrier authority, reflecting transportation capability for packaged goods, fixtures, and commercial furnishings.
                 </p>
                 <p>
-                  Because federal regulations establish distinct tariff and disclosure obligations for consumer household property, prospective shippers must verify specific service scope directly with our Brentwood office.
+                  To ensure full regulatory compliance, consumer residential moving requires specific federal arbitration, tariff, and publication requirements. We invite commercial shippers to discuss specific corporate or B2B requirements with our ownership.
                 </p>
               </div>
 
-              {/* Service Verification Advisory */}
-              <div className="p-5 rounded bg-white border border-[#151719]/10 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#151719]">
-                  <AlertCircle className="w-4 h-4 text-[#D99A38]" />
-                  <span>Confirmation Required Prior to Booking</span>
-                </div>
+              <div className="p-4 rounded bg-amber-500/[0.08] border border-[#D99A38]/30 flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-[#D99A38] shrink-0 mt-0.5" />
                 <p className="text-xs text-[#737980] leading-relaxed">
-                  We encourage customers to confirm cargo acceptance, service parameters, and vehicle requirements directly with our team before making transportation commitments.
+                  <strong>Verification Notice:</strong> All household goods inquiries are subject to individual carrier review, insurance verification, and operational feasibility confirmation prior to booking.
                 </p>
               </div>
 
               <div className="pt-2">
                 <Link
                   to="/services/household-goods"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#151719] hover:text-[#D99A38] transition-colors"
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#151719] hover:text-[#D99A38] underline transition-colors"
                 >
-                  <span>Review Household Goods Authority Details</span>
+                  <span>Review full Household Goods details</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -170,8 +172,12 @@ export default function IndustriesPage() {
 
       {/* CLOSING CTA */}
       <ClosingCta
-        headline="Ready to Discuss Your Shipment?"
-        supportingCopy="Contact DNP Couriers LLC to discuss your specific cargo parameters with our team."
+        headline="Have Specific Cargo Questions?"
+        supportingCopy="Speak directly with DNP Couriers LLC to discuss your commodity, pallet footprint, and dedicated lane requirements."
+        primaryCtaText="Discuss Dedicated Lanes"
+        primaryCtaLink="/dedicated-lanes"
+        secondaryCtaText={`Call ${COMPANY.phone}`}
+        secondaryCtaLink={`tel:${COMPANY.phoneRaw}`}
       />
     </>
   );
