@@ -3,6 +3,41 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { Send, CheckCircle2, AlertCircle, Phone, ArrowLeft, ShieldCheck, Clock, Calendar, Repeat, Truck, Layers } from 'lucide-react';
 import { COMPANY } from '../data/company';
 import SEO from '../components/SEO';
+import ThemedDatePicker from '../components/ThemedDatePicker';
+import ThemedSelect from '../components/ThemedSelect';
+
+const CONTACT_OPTIONS = [
+  { value: 'Phone', label: 'Telephone' },
+  { value: 'Email', label: 'Email' },
+];
+
+const ROUTE_OPTIONS = [
+  { value: 'Round-Trip', label: 'Round-Trip Dedicated Lane' },
+  { value: 'One-Way', label: 'One-Way Recurring Run' },
+  { value: 'Multi-Stop', label: 'Multi-Stop Regional Route' },
+];
+
+const FREQUENCY_OPTIONS = [
+  { value: 'Daily (5+ loads/week)', label: 'Daily (5+ loads/week)' },
+  { value: '3-4 loads/week', label: '3–4 loads per week' },
+  { value: '1-2 loads/week', label: '1–2 loads per week' },
+  { value: 'Bi-weekly', label: 'Bi-weekly regular runs' },
+  { value: 'Monthly / Periodic', label: 'Monthly / Periodic scheduled runs' },
+];
+
+const OPERATING_DAYS_OPTIONS = [
+  { value: 'Monday - Friday', label: 'Monday – Friday' },
+  { value: '7 Days a Week', label: '7 Days a Week' },
+  { value: 'Weekends Only', label: 'Weekends Only' },
+  { value: 'Specific Designated Days', label: 'Specific Designated Days' },
+  { value: 'Flexible Schedule', label: 'Flexible / Negotiable' },
+];
+
+const CARGO_OPTIONS = [
+  { value: 'General Freight', label: 'General Commercial Freight' },
+  { value: 'Household Goods', label: 'Household Goods (Subject to Review)' },
+  { value: 'Commercial Inquiry', label: 'Other Commercial Inquiry' },
+];
 
 export default function RequestQuotePage() {
   const inquiryTypeId = useId();
@@ -386,16 +421,13 @@ export default function RequestQuotePage() {
                       <label htmlFor={contactMethodId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
                         Preferred Contact
                       </label>
-                      <select
+                      <ThemedSelect
                         id={contactMethodId}
                         name="preferredContactMethod"
                         value={formData.preferredContactMethod}
                         onChange={handleChange}
-                        className="themed-select w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
-                      >
-                        <option value="Phone">Telephone</option>
-                        <option value="Email">Email</option>
-                      </select>
+                        options={CONTACT_OPTIONS}
+                      />
                     </div>
                   </div>
                 </div>
@@ -417,17 +449,13 @@ export default function RequestQuotePage() {
                         <label htmlFor={routeTypeId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
                           Route Configuration <span className="text-[#D99A38]">*</span>
                         </label>
-                        <select
+                        <ThemedSelect
                           id={routeTypeId}
                           name="routeType"
                           value={formData.routeType}
                           onChange={handleChange}
-                          className="themed-select w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
-                        >
-                          <option value="Round-Trip">Round-Trip Dedicated Lane</option>
-                          <option value="One-Way">One-Way Recurring Run</option>
-                          <option value="Multi-Stop">Multi-Stop Regional Route</option>
-                        </select>
+                          options={ROUTE_OPTIONS}
+                        />
                       </div>
 
                       <div>
@@ -466,52 +494,40 @@ export default function RequestQuotePage() {
                         <label htmlFor={frequencyId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
                           Estimated Load Frequency <span className="text-[#D99A38]">*</span>
                         </label>
-                        <select
+                        <ThemedSelect
                           id={frequencyId}
                           name="frequency"
                           value={formData.frequency}
                           onChange={handleChange}
-                          className="themed-select w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
-                        >
-                          <option value="Daily (5+ loads/week)">Daily (5+ loads/week)</option>
-                          <option value="3-4 loads/week">3–4 loads per week</option>
-                          <option value="1-2 loads/week">1–2 loads per week</option>
-                          <option value="Bi-weekly">Bi-weekly regular runs</option>
-                          <option value="Monthly / Periodic">Monthly / Periodic scheduled runs</option>
-                        </select>
+                          options={FREQUENCY_OPTIONS}
+                        />
                       </div>
 
                       <div>
                         <label htmlFor={operatingDaysId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
                           Operating Days <span className="text-[#D99A38]">*</span>
                         </label>
-                        <select
+                        <ThemedSelect
                           id={operatingDaysId}
                           name="operatingDays"
                           value={formData.operatingDays}
                           onChange={handleChange}
-                          className="themed-select w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
-                        >
-                          <option value="Monday - Friday">Monday – Friday</option>
-                          <option value="7 Days a Week">7 Days a Week</option>
-                          <option value="Weekends Only">Weekends Only</option>
-                          <option value="Specific Designated Days">Specific Designated Days</option>
-                          <option value="Flexible Schedule">Flexible / Negotiable</option>
-                        </select>
+                          options={OPERATING_DAYS_OPTIONS}
+                        />
                       </div>
 
                       <div>
                         <label htmlFor={startDateId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
                           Target Start Date <span className="text-[#D99A38]">*</span>
                         </label>
-                        <input
-                          type="date"
+                        <ThemedDatePicker
                           id={startDateId}
                           name="startDate"
                           required
+                          minDate="today"
                           value={formData.startDate}
                           onChange={handleChange}
-                          className="themed-date w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719] cursor-pointer"
+                          placeholder="Select start date"
                         />
                       </div>
                     </div>
@@ -641,14 +657,14 @@ export default function RequestQuotePage() {
                         <label htmlFor={startDateId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
                           Target Pickup Date <span className="text-[#D99A38]">*</span>
                         </label>
-                        <input
-                          type="date"
+                        <ThemedDatePicker
                           id={startDateId}
                           name="startDate"
                           required
+                          minDate="today"
                           value={formData.startDate}
                           onChange={handleChange}
-                          className="themed-date w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719] cursor-pointer"
+                          placeholder="Select pickup date"
                         />
                       </div>
 
@@ -656,17 +672,13 @@ export default function RequestQuotePage() {
                         <label htmlFor={commodityId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
                           Cargo Classification <span className="text-[#D99A38]">*</span>
                         </label>
-                        <select
+                        <ThemedSelect
                           id={commodityId}
                           name="cargoCategory"
                           value={formData.cargoCategory}
                           onChange={handleChange}
-                          className="themed-select w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719]"
-                        >
-                          <option value="General Freight">General Commercial Freight</option>
-                          <option value="Household Goods">Household Goods (Subject to Review)</option>
-                          <option value="Commercial Inquiry">Other Commercial Inquiry</option>
-                        </select>
+                          options={CARGO_OPTIONS}
+                        />
                       </div>
                     </div>
 

@@ -3,6 +3,15 @@ import { Link } from 'react-router-dom';
 import { Phone, MapPin, Send, CheckCircle2, AlertCircle, ArrowRight, Repeat, Truck, ShieldCheck } from 'lucide-react';
 import { COMPANY } from '../data/company';
 import SEO from '../components/SEO';
+import ThemedSelect from '../components/ThemedSelect';
+
+const CONTACT_SUBJECTS = [
+  { value: 'Dedicated Lane Partnership', label: 'Dedicated Lane Partnership' },
+  { value: 'General Freight Transportation Inquiry', label: 'General Freight Transportation Inquiry' },
+  { value: 'Freight Broker Carrier Onboarding', label: 'Freight Broker Carrier Onboarding' },
+  { value: 'Operational Capabilities Question', label: 'Operational Capabilities Question' },
+  { value: 'General Business Inquiry', label: 'General Business Inquiry' },
+];
 
 export default function ContactPage() {
   const nameId = useId();
@@ -15,7 +24,7 @@ export default function ContactPage() {
     name: '',
     email: '',
     phone: '',
-    subject: '',
+    subject: 'Dedicated Lane Partnership',
     message: '',
     honeypot: '',
   });
@@ -312,14 +321,12 @@ export default function ContactPage() {
                         <label htmlFor={subjectId} className="block text-xs font-semibold text-[#151719] uppercase tracking-wider mb-2">
                           Topic / Subject <span className="text-[#D99A38]">*</span>
                         </label>
-                        <input
-                          type="text"
+                        <ThemedSelect
                           id={subjectId}
                           name="subject"
-                          required
                           value={formData.subject}
                           onChange={handleChange}
-                          className="w-full bg-[#FAFAF8] border border-[#151719]/20 rounded px-4 py-3 text-sm text-[#151719] transition-colors focus:outline-none focus:border-[#151719] focus:ring-1 focus:ring-[#151719]"
+                          options={CONTACT_SUBJECTS}
                         />
                       </div>
                     </div>

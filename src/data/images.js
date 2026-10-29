@@ -10,22 +10,22 @@ export const IMAGES = {
   // Dedicated Lanes: Box Truck at Logistics Distribution Center
   boxTruckDistribution: {
     src: "/images/dnp-boxtruck-distribution.webp",
-    fallback: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=2000&q=80",
+    fallback: "https://images.unsplash.com/photo-1789148275429-b89fb13e548c?auto=format&fit=crop&w=2000&q=80",
     alt: "Commercial straight box truck positioned at modern distribution center loading dock",
   },
   // About Page: Box Truck & Logistics Operations
   boxTruckLogistics: {
     src: "/images/dnp-boxtruck-logistics.webp",
-    fallback: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=2000&q=80",
-    alt: "Commercial box truck outside an established B2B logistics facility",
+    fallback: "https://images.unsplash.com/photo-1729438268971-152e5833fda1?auto=format&fit=crop&w=2000&q=80",
+    alt: "Commercial white straight box truck outside an established B2B logistics facility",
   },
-  // Operations & Freight: Box Truck beside Commercial Pallets
+  // Operations & Freight: Box Truck on Highway / Bridge
   boxTruckFreight: {
     src: "/images/dnp-boxtruck-freight.webp",
-    fallback: "https://images.unsplash.com/photo-1580674684081-7617fbf3d745?auto=format&fit=crop&w=2000&q=80",
-    alt: "Commercial straight box truck beside safely arranged freight at distribution warehouse",
+    fallback: "https://images.unsplash.com/photo-1787014369402-a4f76386cce0?auto=format&fit=crop&w=2000&q=80",
+    alt: "Commercial straight box truck transporting freight across regional route",
   },
-  // General Freight: Palletized Commercial Cargo
+  // General Freight: Palletized Commercial Cargo and Warehouse Bay
   generalFreight: {
     src: "/images/dnp-general-freight.webp",
     fallback: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=2000&q=80",
@@ -41,7 +41,7 @@ export const IMAGES = {
   industries: {
     src: "/images/dnp-industries-freight.webp",
     fallback: "https://images.unsplash.com/photo-1580674684081-7617fbf3d745?auto=format&fit=crop&w=2000&q=80",
-    alt: "Commercial freight handling and box-truck cargo loading",
+    alt: "Commercial freight handling and palletized cargo loading",
   },
   // Contact Facility Exterior
   contact: {
@@ -53,6 +53,6 @@ export const IMAGES = {
   closingCta: {
     src: "/images/dnp-closing-cta.webp",
     fallback: "https://images.unsplash.com/photo-1555907188-f9fd038c95d4?auto=format&fit=crop&w=2400&q=85",
-    alt: "Commercial box truck on open highway in soft afternoon light",
+    alt: "Commercial straight box truck on open highway in soft afternoon light",
   },
 };
