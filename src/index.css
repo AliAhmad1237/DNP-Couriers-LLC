@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-charcoal: #151719;
+    --color-warm-white: #FAFAF8;
+    --color-steel: #737980;
+    --color-amber: #D99A38;
+  }
+
+  body {
+    background-color: var(--color-warm-white);
+    color: var(--color-charcoal);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* Subtle, restrained borders and dividers */
+.divider-subtle {
+  border-color: rgba(21, 23, 25, 0.12);
+}
+
+/* Custom themed calendar date picker */
+input[type="date"] {
+  color-scheme: light;
+  position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(58%) sepia(85%) saturate(450%) hue-rotate(355deg) brightness(92%) contrast(92%);
+  opacity: 0.9;
+  transition: opacity 0.2s, transform 0.2s;
+  padding: 4px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+/* Custom themed selection dropdown */
+select.themed-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23D99A38' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.15em;
+  padding-right: 2.75rem;
+  cursor: pointer;
+}
+
+select.themed-select option {
+  background-color: #FAFAF8;
+  color: #151719;
+  padding: 10px;
+}
+
+/* Accessible modern form validation per modern-web-guidance */
+input:user-invalid,
+select:user-invalid,
+textarea:user-invalid {
+  border-color: #c93b2b !important;
+  background-color: rgba(201, 59, 43, 0.02);
+}
+
+input:user-valid:not(:placeholder-shown),
+select:user-valid,
+textarea:user-valid:not(:placeholder-shown) {
+  border-color: #2b7a4b;
+}
+
+/* Smooth focus states tailored to the theme */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #D99A38;
+  box-shadow: 0 0 0 1px #D99A38;
+}
